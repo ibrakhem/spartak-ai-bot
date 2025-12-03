@@ -29,7 +29,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     user_conversations[user_id] = []
     
-    welcome = "👋 Assalomu aleykum! Men Spartak AI Assistantman!\n\n📌 Men sizga yordam bera olaman:\n\n🎯 Marketing\n📱 SMM\n📸 Mobilografiya\n\nSavolingizni yozing!"
+    welcome = "👋 Assalomu aleykum! Men Spartak AI Assistantman!\n\n📌 Sizga qanday yordam bera olaman:\n\n🎯 Marketing\n📱 SMM\n📸 Mobilografiya\n\nSavolingizni yozing!"
     await update.message.reply_text(welcome)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
