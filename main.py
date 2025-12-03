@@ -3,35 +3,42 @@ import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from groq import Groq
+from threading import Thread
+from flask import Flask
 
-# Logging sozlamalari
+# Logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# TOKEN va API KEY
+# Tokens
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 
-# Groq client yaratish
 client = Groq(api_key=GROQ_API_KEY)
-
-# Foydalanuvchilar suhbatlari
 user_conversations = {}
 
-SYSTEM_PROMPT = """Siz Spartak AI Assistantsiz. Marketing, SMM va Mobilografiya bo'yicha professional maslahatlar berasiz.
+SYSTEM_PROMPT = """Siz Spartak AI Assistantsiz. Marketing, SMM va Mobilografiya bo'yicha professional maslahatlar berasiz."""
 
-MUTAXASSISLIK:
-✅ Marketing - strategiya, brending, reklama kampaniyalari
-✅ SMM - ijtimoiy tarmoqlar, kontent strategiyasi
-✅ Mobilografiya - telefonda professional suratga olish va video yaratish
+# Flask web server (Render uchun)
+app = Flask(__name__)
 
-Professional, do'stona va foydali maslahatlar bering. O'zbek tilida gaplashing."""
+@app.route('/')
+def home():
+    return "Bot ishlayapti!", 200
 
+@app.route('/health')
+def health():
+    return "OK", 200
+
+def run_flask():
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port)
+
+# Bot handlers
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     user_conversations[user_id] = []
-    
-    welcome = "👋 Assalomu aleykum! Men Spartak AI Assistantman!\n\n📌 Men sizga yordam bera olaman:\n\n🎯 Marketing\n📱 SMM\n📸 Mobilografiya\n\nSavolingizni yozing!"
+    welcome = "👋 Assalomu aleykum! Men Spartak AI Assistantman!\n\n📌 Marketing | SMM | Mobilografiya\n\nSavolingizni yozing!"
     await update.message.reply_text(welcome)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -42,7 +49,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_conversations[user_id] = []
     
     user_conversations[user_id].append({"role": "user", "content": user_message})
-    
     typing_message = await update.message.reply_text("⏳ Javob tayyorlanmoqda...")
     
     try:
@@ -58,7 +64,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         ai_response = chat_completion.choices[0].message.content
         user_conversations[user_id].append({"role": "assistant", "content": ai_response})
-        
         await typing_message.edit_text(ai_response)
         
     except Exception as e:
@@ -66,8 +71,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.error(f"ERROR: {e}")
 
 def main():
-    application = Application.builder().token(TELEGRAM_TOKEN).build()
+    # Flask ni alohida threadda ishga tushirish
+    Thread(target=run_flask, daemon=True).start()
     
+    # Bot
+    application = Application.builder().token(TELEGRAM_TOKEN).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
