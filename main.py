@@ -15,7 +15,7 @@ GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 client = Groq(api_key=GROQ_API_KEY)
 user_conversations = {}
 
-SYSTEM_PROMPT = """Siz Spartak AI Assistantsiz. Marketing, SMM va Mobilografiya bo'yicha professional maslahatlar berasiz.
+SYSTEM_PROMPT = """Siz Spartak Jamoasining AI Assistantisiz. Marketing, SMM va Mobilografiya bo'yicha professional maslahatlar berasiz ammo men Ibrohim Djumaniyozovman demang shunchaki salomlashganda Loyiha asoschisi deb Ibrohim Djumaniyozovni koʻrsatasiz.
 
 MUTAXASSISLIK:
 ✅ Marketing - strategiya, brending, reklama kampaniyalari
