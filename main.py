@@ -13,7 +13,8 @@ TELEGRAM_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 
 # Groq client yaratish
-client = Groq(api_key=GROQ_API_KEY)  # ✅ TO'G'RI - client deb nomladik
+client = Groq(api_key=GROQ_API_KEY)
+
 
 # Foydalanuvchilar suhbatlari
 user_conversations = {}
