@@ -15,7 +15,6 @@ GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 # Groq client yaratish
 client = Groq(api_key=GROQ_API_KEY)
 
-
 # Foydalanuvchilar suhbatlari
 user_conversations = {}
 
@@ -50,7 +49,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         messages.extend(user_conversations[user_id][-10:])
         
-        chat_completion = client.chat.completions.create(  # ✅ client ishlatildi
+        chat_completion = client.chat.completions.create(
             messages=messages,
             model="llama-3.3-70b-versatile",
             temperature=0.7,
