@@ -12,12 +12,8 @@ logger = logging.getLogger(__name__)
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 
-from groq import Groq
-
-groq_client = Groq(
-    api_key=GROQ_API_KEY
-)
-
+# Groq client yaratish
+client = Groq(api_key=GROQ_API_KEY)  # ✅ TO'G'RI - client deb nomladik
 
 # Foydalanuvchilar suhbatlari
 user_conversations = {}
@@ -31,14 +27,14 @@ MUTAXASSISLIK:
 
 Professional, do'stona va foydali maslahatlar bering. O'zbek tilida gaplashing."""
 
-async def start(update: Update, context: ContextTypes.DEFAULT_CONTEXT):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     user_conversations[user_id] = []
     
     welcome = "👋 Assalomu aleykum! Men Spartak AI Assistantman!\n\n📌 Men sizga yordam bera olaman:\n\n🎯 Marketing\n📱 SMM\n📸 Mobilografiya\n\nSavolingizni yozing!"
     await update.message.reply_text(welcome)
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_CONTEXT):
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     user_message = update.message.text
     
@@ -53,7 +49,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_CONTEXT):
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         messages.extend(user_conversations[user_id][-10:])
         
-        chat_completion = client.chat.completions.create(
+        chat_completion = client.chat.completions.create(  # ✅ client ishlatildi
             messages=messages,
             model="llama-3.3-70b-versatile",
             temperature=0.7,
