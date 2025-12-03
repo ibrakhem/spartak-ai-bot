@@ -12,8 +12,12 @@ logger = logging.getLogger(__name__)
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 
-# Groq client
-client = Groq(api_key=GROQ_API_KEY)
+from groq import Groq
+
+groq_client = Groq(
+    api_key=GROQ_API_KEY
+)
+
 
 # Foydalanuvchilar suhbatlari
 user_conversations = {}
