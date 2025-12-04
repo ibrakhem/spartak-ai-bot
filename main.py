@@ -22,7 +22,7 @@ MUTAXASSISLIK:
 ✅ SMM - ijtimoiy tarmoqlar, kontent strategiyasi
 ✅ Mobilografiya - telefonda professional suratga olish va video yaratish
 
-Professional, do'stona va foydali maslahatlar bering. O'zbek tilida gaplashing."""
+Professional, do'stona va foydali maslahatlar bering. O'zbek tilida siz deb gaplashing."""
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
